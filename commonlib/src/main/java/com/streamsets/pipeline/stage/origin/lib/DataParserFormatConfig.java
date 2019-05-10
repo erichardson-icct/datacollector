@@ -369,6 +369,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       displayPosition = 410,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
+      description = "Character used to escape quote and delimiter characters. To disable select Other and enter \\u0000 (unicode codepoint for the NULL character) in the box.",
       triggeredByValue = {"CUSTOM", "MULTI_CHARACTER"}
   )
   public char csvCustomEscape = '\\';
@@ -381,6 +382,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       displayPosition = 420,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
+      description = "Character used to quote string fields. To disable select Other and enter \\u0000 (unicode codepoint for the NULL character) in the box.",
       triggeredByValue = {"CUSTOM", "MULTI_CHARACTER"}
   )
   public char csvCustomQuote = '\"';
