@@ -276,6 +276,20 @@ public class DataParserFormatConfig implements DataFormatConfig {
   public CsvHeader csvHeader = CsvHeader.NO_HEADER;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Header Line Override",
+      description = "The String to use as the header line, must have same delimiter as specified above.",
+      displayPosition = 384,
+      group = "DATA_FORMAT",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "DELIMITED"),
+          @Dependency(configName = "csvHeader", triggeredByValues = {"IGNORE_HEADER","NO_HEADER"})
+      }
+  )
+  public String csvOverrideHeader;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
@@ -1558,6 +1572,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
         .setMaxDataLen(csvMaxObjectLen)
         .setMode(csvFileFormat).setMode(csvHeader)
         .setMode(csvRecordType)
+        .setConfig(DelimitedDataConstants.OVERRIDE_HEADER_CONFIG,csvOverrideHeader)
         .setConfig(DelimitedDataConstants.SKIP_START_LINES, csvSkipStartLines)
         .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
         .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)

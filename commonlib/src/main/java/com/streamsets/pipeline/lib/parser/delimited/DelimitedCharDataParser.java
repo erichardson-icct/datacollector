@@ -99,7 +99,8 @@ public class DelimitedCharDataParser extends AbstractDataParser {
           settings.getFormat(),
           readerOffset,
           settings.getSkipStartLines(),
-          settings.getMaxObjectLen()
+          settings.getMaxObjectLen(),
+          settings.getOverrideHeader()
       );
     }
     String[] hs = parser.getHeaders();

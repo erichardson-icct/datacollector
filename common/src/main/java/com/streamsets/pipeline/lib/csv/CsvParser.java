@@ -42,7 +42,7 @@ public class CsvParser implements DelimitedDataParser {
   private boolean closed;
 
   public CsvParser(Reader reader, CSVFormat format, int maxObjectLen) throws IOException {
-    this(new CountingReader(reader), format, maxObjectLen, 0, 0);
+    this(new CountingReader(reader), format, maxObjectLen, 0, 0, "");
   }
 
   @SuppressWarnings("unchecked")
@@ -51,7 +51,8 @@ public class CsvParser implements DelimitedDataParser {
       CSVFormat format,
       int maxObjectLen,
       long initialPosition,
-      int skipStartLines
+      int skipStartLines,
+      String overrideHeader
   ) throws IOException {
     Utils.checkNotNull(reader, "reader");
     Utils.checkNotNull(reader.getPos() == 0,
@@ -62,6 +63,14 @@ public class CsvParser implements DelimitedDataParser {
     this.reader = reader;
     currentPos = initialPosition;
     this.maxObjectLen = maxObjectLen;
+    boolean useOverrideHeader = StringUtils.isNotEmpty(overrideHeader);
+    String[] overrideHeaders = null;
+    String[] firstLine = null;
+    if (useOverrideHeader) {
+      overrideHeaders = overrideHeader.split(String.valueOf(format.getDelimiter()),-1);
+      fixNullHeaderNames(overrideHeaders);
+      format.withHeader(overrideHeaders);
+    }
     if (initialPosition == 0) {
       if (skipStartLines > 0) {
         skipLinesPosCorrection = skipLines(reader, skipStartLines);
@@ -70,16 +79,15 @@ public class CsvParser implements DelimitedDataParser {
       if (format.getSkipHeaderRecord()) {
         format = format.withSkipHeaderRecord(false);
         parser = new CSVParser(reader, format, 0, 0);
-        headers = read();
+        firstLine = read();
       } else {
         parser = new CSVParser(reader, format, 0, 0);
-        headers = null;
       }
     } else {
       if (format.getSkipHeaderRecord()) {
         format = format.withSkipHeaderRecord(false);
         parser = new CSVParser(reader, format, 0, 0);
-        headers = read();
+        firstLine = read();
         while (getReaderPosition() < initialPosition && read() != null) {
         }
         if (getReaderPosition() != initialPosition) {
@@ -89,16 +97,20 @@ public class CsvParser implements DelimitedDataParser {
       } else {
         IOUtils.skipFully(reader, initialPosition);
         parser = new CSVParser(reader, format, initialPosition, 0);
-        headers = null;
       }
     }
-    fixNullHeaderNames();
+    if (useOverrideHeader) {
+      headers = overrideHeaders;
+    } else {
+      headers = firstLine;
+    }
+    fixNullHeaderNames(headers);
   }
 
-  private void fixNullHeaderNames() {
+  private void fixNullHeaderNames(String[] headers) {
     // makes sure any blank column names in the header get replaced with an incremental string value
     if (headers == null) return;
-    for (int x=0; x < headers.length; x++) {
+    for (int x = 0; x < headers.length; x++) {
       if (StringUtils.isEmpty(headers[x])) {
         headers[x] = "empty-" + x;
       }

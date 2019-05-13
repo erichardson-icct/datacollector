@@ -113,4 +113,46 @@ public class TestDelimitedDataParserFactory {
     Assert.assertNull(record);
     parser.close();
   }
+
+  @Test
+  public void testAllowExtraColumnsWithHeaderOverride() throws Exception {
+    Stage.Context context = ContextInfoCreator.createSourceContext("", false, OnRecordError.DISCARD, Collections.emptyList());
+    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, DataParserFormat.DELIMITED);
+    DataParserFactory factory = builder
+        .setMaxDataLen(100)
+        .setMode(CsvMode.CSV)
+        .setMode(CsvHeader.WITH_HEADER)
+        .setMode(CsvRecordType.LIST_MAP)
+        .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, '^')
+        .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, '!')
+        .setConfig(DelimitedDataConstants.QUOTE_CONFIG, '\'')
+        .setConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, true)
+        .setConfig(DelimitedDataConstants.OVERRIDE_HEADER_CONFIG,"D,E,F")
+        .build();
+    DataParser parser = factory.getParser("id", "a,b,c\n" +
+        "1,2,3,4\n" +
+        "1,2,3,4,5\n"
+    );
+    // First line
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("1", record.get().getValueAsMap().get("D").getValueAsString());
+    Assert.assertEquals("2", record.get().getValueAsMap().get("E").getValueAsString());
+    Assert.assertEquals("3", record.get().getValueAsMap().get("F").getValueAsString());
+    Assert.assertEquals("4", record.get().getValueAsMap().get("_extra_01").getValueAsString());
+
+    // Second line
+    record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("1", record.get().getValueAsMap().get("D").getValueAsString());
+    Assert.assertEquals("2", record.get().getValueAsMap().get("E").getValueAsString());
+    Assert.assertEquals("3", record.get().getValueAsMap().get("F").getValueAsString());
+    Assert.assertEquals("4", record.get().getValueAsMap().get("_extra_01").getValueAsString());
+    Assert.assertEquals("5", record.get().getValueAsMap().get("_extra_02").getValueAsString());
+
+    // EOF
+    record = parser.parse();
+    Assert.assertNull(record);
+    parser.close();
+  }
 }

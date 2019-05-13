@@ -23,6 +23,7 @@ public class DelimitedDataParserSettings {
   private int skipStartLines;
   private CSVFormat format;
   private CsvHeader header;
+  private String overrideHeader;
   private int maxObjectLen;
   private CsvRecordType recordType;
   private boolean parseNull;
@@ -48,6 +49,10 @@ public class DelimitedDataParserSettings {
 
   public CsvHeader getHeader() {
     return header;
+  }
+
+  public String getOverrideHeader(){
+    return overrideHeader;
   }
 
   public int getMaxObjectLen() {
@@ -98,6 +103,7 @@ public class DelimitedDataParserSettings {
     private int skipStartLines;
     private CSVFormat format;
     private CsvHeader header;
+    private String overrideHeader;
     private int maxObjectLen;
     private CsvRecordType recordType;
     private boolean parseNull;
@@ -178,9 +184,15 @@ public class DelimitedDataParserSettings {
       return this;
     }
 
+    public Builder withOverrideHeader(String overrideHeader) {
+      this.overrideHeader=overrideHeader;
+      return this;
+    }
+
     public DelimitedDataParserSettings build() {
       DelimitedDataParserSettings delimitedDataParserSettings = new DelimitedDataParserSettings();
       delimitedDataParserSettings.header = this.header;
+      delimitedDataParserSettings.overrideHeader=this.overrideHeader;
       delimitedDataParserSettings.allowExtraColumns = this.allowExtraColumns;
       delimitedDataParserSettings.maxObjectLen = this.maxObjectLen;
       delimitedDataParserSettings.recordType = this.recordType;

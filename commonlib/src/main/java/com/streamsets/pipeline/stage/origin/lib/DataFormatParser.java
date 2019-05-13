@@ -336,6 +336,7 @@ public class DataFormatParser {
           .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, dataFormatConfig.csvCustomDelimiter)
           .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, dataFormatConfig.csvCustomEscape)
           .setConfig(DelimitedDataConstants.QUOTE_CONFIG, dataFormatConfig.csvCustomQuote)
+          .setConfig(DelimitedDataConstants.OVERRIDE_HEADER_CONFIG,dataFormatConfig.csvOverrideHeader)
           .setConfig(DelimitedDataConstants.PARSE_NULL, dataFormatConfig.parseNull)
           .setConfig(DelimitedDataConstants.NULL_CONSTANT, dataFormatConfig.nullConstant)
           .setConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG, dataFormatConfig.csvEnableComments)

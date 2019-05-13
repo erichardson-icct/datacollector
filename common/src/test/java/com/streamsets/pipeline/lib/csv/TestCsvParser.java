@@ -41,11 +41,28 @@ public class TestCsvParser {
   }
 
   @Test
+  public void testParserNoHeadersWithOverrideHeaders() throws Exception {
+    CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"), CSVFormat.DEFAULT, -1,0,0,"o1,o2,o3,o4");
+    Assert.assertArrayEquals(new String[]{"o1", "o2", "o3", "o4"}, parser.getHeaders());
+  }
+
+  @Test
   public void testParserHeaders() throws Exception {
     CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"),
                                      CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1);
     try {
       Assert.assertArrayEquals(new String[]{"h1", "h2", "h3", "h4"}, parser.getHeaders());
+    } finally {
+      parser.close();
+    }
+  }
+
+  @Test
+  public void testParserHeadersWithOverride() throws Exception {
+    CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"),
+        CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1,0,0,"o1,o2,o3,o4");
+    try {
+      Assert.assertArrayEquals(new String[]{"o1", "o2", "o3", "o4"}, parser.getHeaders());
     } finally {
       parser.close();
     }
@@ -78,7 +95,7 @@ public class TestCsvParser {
   @Test
   public void testParserRecordsFromOffset() throws Exception {
     CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"),
-                                     CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 12, 0);
+                                     CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 12, 0,null);
     try {
       Assert.assertEquals(12, parser.getReaderPosition());
 
@@ -98,7 +115,7 @@ public class TestCsvParser {
       parser.close();
     }
     parser = new CsvParser(getReader("TestCsvParser-default.csv"),
-                                     CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 20, 0);
+                                     CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 20, 0,"");
     try {
       Assert.assertEquals(20, parser.getReaderPosition());
 
@@ -125,6 +142,23 @@ public class TestCsvParser {
       Assert.assertEquals(18, parser.getReaderPosition());
       Assert.assertNotNull(record);
       Assert.assertArrayEquals(new String[]{"a","empty-1","empty-2","d"}, parser.getHeaders());
+      Assert.assertArrayEquals(new String[]{"aa", "bb", "cc","dd"}, record);
+
+    } finally {
+      parser.close();
+    }
+  }
+  @Test
+  public void testOverrideHeadersWithNullColumns() throws Exception {
+    CsvParser parser = new CsvParser(new CountingReader(new StringReader("a,,,d\naa,bb,cc,dd\n")),
+        CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), 15,0,0,"e,,,h");
+    try {
+      Assert.assertEquals(6, parser.getReaderPosition());
+
+      String[] record = parser.read();
+      Assert.assertEquals(18, parser.getReaderPosition());
+      Assert.assertNotNull(record);
+      Assert.assertArrayEquals(new String[]{"e","empty-1","empty-2","h"}, parser.getHeaders());
       Assert.assertArrayEquals(new String[]{"aa", "bb", "cc","dd"}, record);
 
     } finally {
@@ -166,7 +200,8 @@ public class TestCsvParser {
         CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(false),
         -1,
         0,
-        2
+        2,
+        ""
     );
     try {
       Assert.assertEquals(9, parser.getReaderPosition());
@@ -198,7 +233,8 @@ public class TestCsvParser {
       CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true),
       -1,
       0,
-      0
+      0,
+        null
     );
   }
 }

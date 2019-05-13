@@ -30,6 +30,7 @@ public class DelimitedDataConstants {
   public static final String EXTRA_COLUMN_PREFIX = "extraColumnPrefix";
   public static final String MULTI_CHARACTER_FIELD_DELIMITER_CONFIG = "multiCharacterFieldDelimiter";
   public static final String MULTI_CHARACTER_LINE_DELIMITER_CONFIG = "multiCharacterLineDelimiter";
+  public static final String OVERRIDE_HEADER_CONFIG = "overrideHeader";
 
   public static final String DEFAULT_EXTRA_COLUMN_PREFIX = "_extra_";
 
