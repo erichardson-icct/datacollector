@@ -277,9 +277,9 @@ public class DataParserFormatConfig implements DataFormatConfig {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Header Line Override",
-      description = "The String to use as the header line, must have same delimiter as specified above.",
+      type = ConfigDef.Type.LIST,
+      label = "Header Override",
+      description = "The header for each column.",
       displayPosition = 384,
       group = "DATA_FORMAT",
       dependencies = {
@@ -287,7 +287,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
           @Dependency(configName = "csvHeader", triggeredByValues = {"IGNORE_HEADER","NO_HEADER"})
       }
   )
-  public String csvOverrideHeader;
+  public List<String> csvOverrideHeader;
 
   @ConfigDef(
       required = true,

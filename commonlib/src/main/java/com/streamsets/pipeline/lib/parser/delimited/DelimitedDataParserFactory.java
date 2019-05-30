@@ -31,6 +31,7 @@ import org.apache.commons.csv.CSVFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +41,7 @@ public class DelimitedDataParserFactory extends DataParserFactory {
       .put(DelimitedDataConstants.DELIMITER_CONFIG, '|')
       .put(DelimitedDataConstants.ESCAPE_CONFIG, '\\')
       .put(DelimitedDataConstants.QUOTE_CONFIG, '"')
-      .put(DelimitedDataConstants.OVERRIDE_HEADER_CONFIG, "")
+      .put(DelimitedDataConstants.OVERRIDE_HEADER_CONFIG, new ArrayList<>())
       .put(DelimitedDataConstants.SKIP_START_LINES, 0)
       .put(DelimitedDataConstants.PARSE_NULL, false)
       .put(DelimitedDataConstants.NULL_CONSTANT, "\\\\N")

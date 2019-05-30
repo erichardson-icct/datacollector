@@ -25,10 +25,11 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class CsvParser implements DelimitedDataParser {
   private long currentPos;
@@ -42,7 +43,7 @@ public class CsvParser implements DelimitedDataParser {
   private boolean closed;
 
   public CsvParser(Reader reader, CSVFormat format, int maxObjectLen) throws IOException {
-    this(new CountingReader(reader), format, maxObjectLen, 0, 0, "");
+    this(new CountingReader(reader), format, maxObjectLen, 0, 0, new ArrayList<>());
   }
 
   @SuppressWarnings("unchecked")
@@ -52,7 +53,7 @@ public class CsvParser implements DelimitedDataParser {
       int maxObjectLen,
       long initialPosition,
       int skipStartLines,
-      String overrideHeader
+      List<String> overrideHeader
   ) throws IOException {
     Utils.checkNotNull(reader, "reader");
     Utils.checkNotNull(reader.getPos() == 0,
@@ -63,11 +64,11 @@ public class CsvParser implements DelimitedDataParser {
     this.reader = reader;
     currentPos = initialPosition;
     this.maxObjectLen = maxObjectLen;
-    boolean useOverrideHeader = StringUtils.isNotEmpty(overrideHeader);
+    boolean useOverrideHeader = overrideHeader != null && !overrideHeader.isEmpty();
     String[] overrideHeaders = null;
     String[] firstLine = null;
     if (useOverrideHeader) {
-      overrideHeaders = overrideHeader.split(String.valueOf(format.getDelimiter()),-1);
+      overrideHeaders = overrideHeader.toArray(new String[overrideHeader.size()]);
       fixNullHeaderNames(overrideHeaders);
       format.withHeader(overrideHeaders);
     }

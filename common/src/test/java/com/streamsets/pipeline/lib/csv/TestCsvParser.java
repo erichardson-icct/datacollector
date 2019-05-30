@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TestCsvParser {
 
@@ -42,7 +44,7 @@ public class TestCsvParser {
 
   @Test
   public void testParserNoHeadersWithOverrideHeaders() throws Exception {
-    CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"), CSVFormat.DEFAULT, -1,0,0,"o1,o2,o3,o4");
+    CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"), CSVFormat.DEFAULT, -1,0,0, Arrays.asList("o1","o2","o3","o4"));
     Assert.assertArrayEquals(new String[]{"o1", "o2", "o3", "o4"}, parser.getHeaders());
   }
 
@@ -60,7 +62,7 @@ public class TestCsvParser {
   @Test
   public void testParserHeadersWithOverride() throws Exception {
     CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"),
-        CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1,0,0,"o1,o2,o3,o4");
+        CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1,0,0,Arrays.asList("o1","o2","o3","o4"));
     try {
       Assert.assertArrayEquals(new String[]{"o1", "o2", "o3", "o4"}, parser.getHeaders());
     } finally {
@@ -115,7 +117,7 @@ public class TestCsvParser {
       parser.close();
     }
     parser = new CsvParser(getReader("TestCsvParser-default.csv"),
-                                     CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 20, 0,"");
+                                     CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 20, 0,new ArrayList<>());
     try {
       Assert.assertEquals(20, parser.getReaderPosition());
 
@@ -151,7 +153,7 @@ public class TestCsvParser {
   @Test
   public void testOverrideHeadersWithNullColumns() throws Exception {
     CsvParser parser = new CsvParser(new CountingReader(new StringReader("a,,,d\naa,bb,cc,dd\n")),
-        CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), 15,0,0,"e,,,h");
+        CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), 15,0,0,Arrays.asList("e",null,"","h"));
     try {
       Assert.assertEquals(6, parser.getReaderPosition());
 
@@ -201,7 +203,7 @@ public class TestCsvParser {
         -1,
         0,
         2,
-        ""
+        new ArrayList<>()
     );
     try {
       Assert.assertEquals(9, parser.getReaderPosition());
@@ -234,7 +236,8 @@ public class TestCsvParser {
       -1,
       0,
       0,
-        null
+      null
     );
   }
+
 }

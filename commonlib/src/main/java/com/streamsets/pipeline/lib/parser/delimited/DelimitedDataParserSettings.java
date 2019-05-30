@@ -19,11 +19,13 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvRecordType;
 import org.apache.commons.csv.CSVFormat;
 
+import java.util.List;
+
 public class DelimitedDataParserSettings {
   private int skipStartLines;
   private CSVFormat format;
   private CsvHeader header;
-  private String overrideHeader;
+  private List<String> overrideHeader;
   private int maxObjectLen;
   private CsvRecordType recordType;
   private boolean parseNull;
@@ -51,7 +53,7 @@ public class DelimitedDataParserSettings {
     return header;
   }
 
-  public String getOverrideHeader(){
+  public List<String> getOverrideHeader(){
     return overrideHeader;
   }
 
@@ -103,7 +105,7 @@ public class DelimitedDataParserSettings {
     private int skipStartLines;
     private CSVFormat format;
     private CsvHeader header;
-    private String overrideHeader;
+    private List<String> overrideHeader;
     private int maxObjectLen;
     private CsvRecordType recordType;
     private boolean parseNull;
@@ -184,7 +186,7 @@ public class DelimitedDataParserSettings {
       return this;
     }
 
-    public Builder withOverrideHeader(String overrideHeader) {
+    public Builder withOverrideHeader(List<String> overrideHeader) {
       this.overrideHeader=overrideHeader;
       return this;
     }

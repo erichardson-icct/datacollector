@@ -33,6 +33,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -91,7 +92,7 @@ public class TestDelimitedCharDataParser {
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.NO_HEADER)
-        .withOverrideHeader("C,D")
+        .withOverrideHeader(Arrays.asList("C","D"))
         .withMaxObjectLen(-1)
         .withRecordType(CsvRecordType.LIST)
         .withParseNull(false)
@@ -169,7 +170,7 @@ public class TestDelimitedCharDataParser {
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.NO_HEADER)
-        .withOverrideHeader("D,E")
+        .withOverrideHeader(Arrays.asList("D","E"))
         .withRecordType(CsvRecordType.LIST_MAP)
         .withMaxObjectLen(-1)
         .withParseNull(false)
@@ -234,7 +235,7 @@ public class TestDelimitedCharDataParser {
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.IGNORE_HEADER)
-        .withOverrideHeader("D,E")
+        .withOverrideHeader(Arrays.asList("D","E"))
         .withMaxObjectLen(-1)
         .withRecordType(CsvRecordType.LIST)
         .withParseNull(false)

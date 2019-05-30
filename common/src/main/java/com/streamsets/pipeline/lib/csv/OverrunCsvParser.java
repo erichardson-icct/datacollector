@@ -23,6 +23,8 @@ import org.apache.commons.csv.CSVRecord;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OverrunCsvParser extends CsvParser {
   private boolean overrun;
@@ -38,7 +40,7 @@ public class OverrunCsvParser extends CsvParser {
         initialPosition,
         0,
         maxObjectLen,
-        ""
+        new ArrayList<>()
     );
   }
 
@@ -48,7 +50,7 @@ public class OverrunCsvParser extends CsvParser {
       long initialPosition,
       int skipStartLines,
       int maxObjectLen,
-      String overrideHeader
+      List<String> overrideHeader
   ) throws IOException {
     super(reader, format, maxObjectLen, initialPosition, skipStartLines,overrideHeader);
     OverrunReader countingReader = (OverrunReader) getReader();

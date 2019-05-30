@@ -30,6 +30,7 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 public class TestDelimitedDataParserFactory {
@@ -127,7 +128,7 @@ public class TestDelimitedDataParserFactory {
         .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, '!')
         .setConfig(DelimitedDataConstants.QUOTE_CONFIG, '\'')
         .setConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, true)
-        .setConfig(DelimitedDataConstants.OVERRIDE_HEADER_CONFIG,"D,E,F")
+        .setConfig(DelimitedDataConstants.OVERRIDE_HEADER_CONFIG, Arrays.asList("D","E","F"))
         .build();
     DataParser parser = factory.getParser("id", "a,b,c\n" +
         "1,2,3,4\n" +
